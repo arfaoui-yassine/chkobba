@@ -17,8 +17,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   );
 
   int selectedDifficulty = 1;
-  Color selectedDifficultyColor = Colors.green;
-  List<Color> difficultyColors = [Colors.green, Colors.yellow, Colors.red];
+  Color selectedDifficultyColor = const Color.fromARGB(255, 0, 228, 0);
+  List<Color> difficultyColors = [
+    const Color.fromARGB(255, 0, 228, 0),
+    const Color.fromARGB(255, 231, 239, 0),
+    const Color.fromARGB(255, 255, 93, 93),
+  ];
 
   List<List<Color>> themes = [
     [Colors.grey.shade800, Colors.white],
@@ -53,115 +57,153 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+    final double fontScale = screenWidth / 430;
+    final double verticalGap = 36 * fontScale;
+    final double titleGap = 65 * fontScale;
+
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent.shade100,
+      backgroundColor: const Color.fromARGB(255, 173, 227, 246),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Center(
-                child: Text(
-                  'Game Settings',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 100 * fontScale),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24 * fontScale,
+                    vertical: 24 * fontScale,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 40 * fontScale, // Increased padding
+                          bottom: titleGap,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Game Settings',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 40 * fontScale,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      _buildLabeledField(
+                        "Number of Values",
+                        numberOfValuesController,
+                        fontScale,
+                      ),
+                      SizedBox(height: verticalGap),
+                      _buildLabeledField(
+                        "Length of Numbers",
+                        lengthOfNumbersController,
+                        fontScale,
+                      ),
+                      SizedBox(height: verticalGap),
+                      _buildLabeledColor(
+                        "Difficulty",
+                        selectedDifficultyColor,
+                        fontScale,
+                      ),
+                      SizedBox(height: 24 * fontScale),
+                      _buildColorOptions(difficultyColors, (color, index) {
+                        setState(() {
+                          selectedDifficultyColor = color;
+                          selectedDifficulty = index + 1;
+                        });
+                      }, fontScale),
+                      SizedBox(height: verticalGap),
+                      _buildLabeledColor("Theme", selectedTheme[0], fontScale),
+                      SizedBox(height: 24 * fontScale),
+                      _buildColorOptions(themes.map((t) => t[0]).toList(), (
+                        color,
+                        index,
+                      ) {
+                        setState(() {
+                          selectedTheme = themes[index];
+                        });
+                      }, fontScale),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              _buildLabeledField("Number of Values", numberOfValuesController),
-              const SizedBox(height: 24),
-              _buildLabeledField(
-                "Length of Numbers",
-                lengthOfNumbersController,
-              ),
-              const SizedBox(height: 24),
-              _buildColorSelector(
-                "Difficulty",
-                selectedDifficultyColor,
-                difficultyColors,
-                (color, index) {
-                  setState(() {
-                    selectedDifficultyColor = color;
-                    selectedDifficulty = index + 1;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              _buildColorSelector(
-                "Theme",
-                selectedTheme[0],
-                themes.map((t) => t[0]).toList(),
-                (color, index) {
-                  setState(() {
-                    selectedTheme = themes[index];
-                  });
-                },
-              ),
-              const Spacer(),
-              Center(
+            ),
+            Positioned(
+              bottom: 0.0001 * fontScale, // Closer to bottom
+              left: 0,
+              right: 0,
+              child: Center(
                 child: ElevatedButton(
                   onPressed: startGame,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 62 * fontScale,
+                      vertical: 25 * fontScale,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(50),
+                      side: const BorderSide(color: Colors.black, width: 4),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Start Memorization',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 18,
+                      fontSize: 25 * fontScale,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildLabeledField(String label, TextEditingController controller) {
+  Widget _buildLabeledField(
+    String label,
+    TextEditingController controller,
+    double fontScale,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Poppins',
-            fontSize: 22,
+            fontSize: 25 * fontScale,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(
-          width: 100,
+          width: 80 * fontScale,
+          height: 50 * fontScale,
           child: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16 * fontScale),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black, width: 2),
-                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: Colors.black, width: 3.5),
+                borderRadius: BorderRadius.circular(50),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black, width: 2),
-                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: Colors.black, width: 3.5),
+                borderRadius: BorderRadius.circular(50),
               ),
             ),
           ),
@@ -170,57 +212,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildColorSelector(
-    String label,
-    Color selected,
-    List<Color> options,
-    Function(Color, int) onSelect,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLabeledColor(String label, Color selected, double fontScale) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: selected,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 2),
-              ),
-            ),
-          ],
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 25 * fontScale,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(options.length, (index) {
-            final color = options[index];
-            return GestureDetector(
-              onTap: () => onSelect(color, index),
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black, width: 2),
-                ),
-              ),
-            );
-          }),
+        Container(
+          width: 80 * fontScale,
+          height: 50 * fontScale,
+          decoration: BoxDecoration(
+            color: selected,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: Colors.black, width: 3.5),
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildColorOptions(
+    List<Color> options,
+    Function(Color, int) onSelect,
+    double fontScale,
+  ) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 40 * fontScale,
+      runSpacing: 40 * fontScale,
+      children: List.generate(options.length, (index) {
+        final color = options[index];
+        return GestureDetector(
+          onTap: () => onSelect(color, index),
+          child: Container(
+            width: 70 * fontScale,
+            height: 60 * fontScale,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(50),
+              border: Border.all(color: Colors.black, width: 3.5),
+            ),
+          ),
+        );
+      }),
     );
   }
 }
