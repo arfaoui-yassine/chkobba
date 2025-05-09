@@ -21,6 +21,12 @@ flutter:
   uses-material-design: true
   assets:
     - assets/fluffu_logo.png
+    - assets/fluffy_normal.png
+    - assets/fluffy_happy.png
+    - assets/fluffy_sad.png
+    - assets/fluffy_confused1.png
+    - assets/fluffy_confused2.png
+    - assets/fluffy_icon.png
   fonts:
     - family: Risque
       fonts:

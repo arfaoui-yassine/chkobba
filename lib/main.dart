@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../screens/welcome_screen.dart';
+import 'screens/welcome_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const WelcomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const WelcomeScreen(),
+        '/settings': (context) => const SettingsScreen(),
+      },
     );
   }
 }
