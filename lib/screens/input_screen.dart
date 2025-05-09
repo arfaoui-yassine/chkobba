@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
+import 'result_screen.dart'; // make sure to import your result screen
 
 class InputScreen extends StatefulWidget {
   final List<String> numbersToGuess;
@@ -20,9 +21,11 @@ class _InputScreenState extends State<InputScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final Set<String> _correctGuesses = {};
+  final Set<String> _allGuesses = {};
   int _correctCount = 0;
   int _faultCount = 0;
   Color _inputBgColor = Colors.white;
+
   late AnimationController _animationController;
   late Animation<double> _shakeAnimation;
 
@@ -48,30 +51,53 @@ class _InputScreenState extends State<InputScreen>
     final input = _controller.text.trim();
     _controller.clear();
 
-    if (input.isEmpty || _correctGuesses.contains(input)) return;
+    if (input.isEmpty || _allGuesses.contains(input)) return;
+
+    _allGuesses.add(input);
 
     if (widget.numbersToGuess.contains(input)) {
-      setState(() {
-        _correctGuesses.add(input);
-        _correctCount++;
-        _inputBgColor = Colors.green.shade300;
-      });
-      Future.delayed(const Duration(milliseconds: 400), () {
+      if (!_correctGuesses.contains(input)) {
         setState(() {
-          _inputBgColor = Colors.white;
+          _correctGuesses.add(input);
+          _correctCount++;
+          _inputBgColor = Colors.green.shade300;
         });
-      });
+        Future.delayed(const Duration(milliseconds: 400), () {
+          setState(() {
+            _inputBgColor = Colors.white;
+          });
+        });
+      }
     } else {
       setState(() {
         _faultCount++;
-        print("❌ Fault count: $_faultCount");
         _inputBgColor = Colors.red.shade300;
+        print('Wrong guesses count: $_faultCount'); // 👈 Print added here
       });
       _animationController.forward();
       Future.delayed(const Duration(milliseconds: 400), () {
         setState(() {
           _inputBgColor = Colors.white;
         });
+      });
+    }
+
+    if (_correctCount >= widget.numbersToGuess.length || _faultCount >= 3) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => ResultsScreen(
+                  numbersToGuess: widget.numbersToGuess,
+                  guessedNumbers: _correctGuesses,
+                  themeColors: widget.themeColors,
+                  onRestart: () {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                ),
+          ),
+        );
       });
     }
   }

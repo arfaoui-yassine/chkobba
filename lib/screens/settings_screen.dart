@@ -9,10 +9,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final TextEditingController numberOfValuesController =
-      TextEditingController();
-  final TextEditingController lengthOfNumbersController =
-      TextEditingController();
+  final TextEditingController numberOfValuesController = TextEditingController(
+    text: '6',
+  );
+  final TextEditingController lengthOfNumbersController = TextEditingController(
+    text: '2',
+  );
 
   int selectedDifficulty = 1;
   Color selectedDifficultyColor = Colors.green;
