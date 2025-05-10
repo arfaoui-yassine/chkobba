@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
 
@@ -35,12 +37,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final int n = int.tryParse(numberOfValuesController.text) ?? 5;
     final int x = int.tryParse(lengthOfNumbersController.text) ?? 3;
 
-    final List<String> numbers = List.generate(n, (_) {
-      return List.generate(
-        x,
-        (_) => (0 + (9 * (UniqueKey().hashCode % 10) / 10).floor()).toString(),
-      ).join();
-    });
+    final List<String> numbers = () {
+      final random = Random();
+      final Set<String> generatedNumbers = {}; // To track uniqueness
+
+      return List.generate(n, (_) {
+        String number;
+        do {
+          // Generate an x-digit random number
+          number =
+              List.generate(x, (_) => random.nextInt(10).toString()).join();
+        } while (generatedNumbers.contains(number)); // Repeat if number exists
+
+        generatedNumbers.add(number);
+        return number;
+      });
+    }();
 
     Navigator.push(
       context,

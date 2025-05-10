@@ -141,13 +141,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
             // 🎉 Confetti
             ConfettiWidget(
               confettiController: _confettiController,
-              blastDirection: -pi / 2,
+              blastDirectionality:
+                  BlastDirectionality.explosive, // Spread in all directions
               emissionFrequency: 0.05,
               numberOfParticles: 20,
-              maxBlastForce: 30,
-              minBlastForce: 10,
               gravity: 0.1,
               shouldLoop: false,
+              colors: const [Colors.red, Colors.blue, Colors.green],
+              // Adjust position to cover the whole screen
+              blastDirection: 0, // In radians (0 means right, pi means left)
+              minBlastForce: 5,
+              maxBlastForce: 20,
             ),
             // 🔘 Restart Button (pinned 20px from bottom of screen)
             Positioned(
