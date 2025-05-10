@@ -81,19 +81,42 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fontSize = screenWidth * 0.26; // Adjust this factor as needed
+
     return Scaffold(
       backgroundColor: widget.themeColors[0],
-      body: Center(
-        child: Text(
-          (currentIndex < widget.numbers.length && showNumber)
-              ? widget.numbers[currentIndex]
-              : '',
-          style: TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Poppins',
-            color: widget.themeColors[1],
-          ),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(flex: 3),
+            if (currentIndex < widget.numbers.length && showNumber)
+              Center(
+                child: Text(
+                  widget.numbers[currentIndex],
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                    color: widget.themeColors[1],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            const Spacer(flex: 3),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 50),
+                child: Image.asset(
+                  '../../assets/Lobza.png',
+                  height: 160,
+
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

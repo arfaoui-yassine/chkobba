@@ -1,3 +1,4 @@
+import 'package:chkobba/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'dart:math';
@@ -44,106 +45,100 @@ class _ResultsScreenState extends State<ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final guessedCount = widget.guessedNumbers.length;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final fontScale = screenWidth / 430;
+    final horizontalPadding = 32.0;
+    final itemSpacing = 16.0;
+    final itemsPerRow = 4;
+    final availableWidth =
+        screenWidth -
+        (horizontalPadding * 2) -
+        ((itemsPerRow - 1) * itemSpacing);
+    final itemWidth = availableWidth / itemsPerRow;
 
     return Scaffold(
       backgroundColor: widget.themeColors[0],
       body: SafeArea(
         child: Stack(
-          alignment: Alignment.topCenter,
           children: [
-            Column(
-              children: [
-                const SizedBox(height: 20),
-                const Text(
-                  'Result',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '$guessedCount / ${widget.numbersToGuess.length}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Your Guesses:',
-                  style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Wrap(
-                      spacing: 16,
-                      runSpacing: 16,
-                      alignment: WrapAlignment.center,
-                      children:
-                          widget.numbersToGuess.map((num) {
-                            final isGuessed = widget.guessedNumbers.contains(
-                              num,
-                            );
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: isGuessed ? Colors.green : Colors.red,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                num,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+            // Full screen container to allow proper stacking
+            SizedBox.expand(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: 24 * fontScale,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Text(
+                            'Result',
+                            style: TextStyle(
+                              fontFamily: 'Risque',
+                              fontSize: 40 * fontScale,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Center(
+                          child: Text(
+                            '$guessedCount / ${widget.numbersToGuess.length}',
+                            style: TextStyle(
+                              fontSize: 25 * fontScale,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Wrap(
+                          spacing: itemSpacing,
+                          runSpacing: itemSpacing,
+                          alignment: WrapAlignment.center,
+                          children:
+                              widget.numbersToGuess.map((num) {
+                                final isGuessed = widget.guessedNumbers
+                                    .contains(num);
+                                return Container(
+                                  width: itemWidth,
+                                  height: 60,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isGuessed
+                                            ? Colors.green
+                                            : const Color(0xFFFF7F7F),
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 3,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    num,
+                                    style: TextStyle(
+                                      fontSize: 20 * fontScale,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Poppins',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: ElevatedButton(
-                    onPressed: widget.onRestart,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        side: const BorderSide(color: Colors.black),
-                      ),
-                    ),
-                    child: const Text(
-                      'Restart',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-            // 🎉 Confetti Animation
+            // 🎉 Confetti
             ConfettiWidget(
               confettiController: _confettiController,
               blastDirection: -pi / 2,
@@ -153,6 +148,42 @@ class _ResultsScreenState extends State<ResultsScreen> {
               minBlastForce: 10,
               gravity: 0.1,
               shouldLoop: false,
+            ),
+            // 🔘 Restart Button (pinned 20px from bottom of screen)
+            Positioned(
+              bottom: 90,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SettingsScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 130 * fontScale,
+                      vertical: 25 * fontScale,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: const BorderSide(color: Colors.black, width: 4),
+                    ),
+                  ),
+                  child: Text(
+                    'Restart',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 25 * fontScale,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

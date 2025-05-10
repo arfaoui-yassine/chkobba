@@ -25,9 +25,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ];
 
   List<List<Color>> themes = [
-    [Colors.grey.shade800, Colors.white],
-    [Colors.white, Colors.black],
-    [Colors.blue.shade100, Colors.red],
+    [Color.fromARGB(255, 173, 227, 246), Color.fromARGB(255, 13, 5, 255)],
+    [Color.fromARGB(255, 253, 187, 251), Color.fromARGB(255, 137, 22, 130)],
+    [Color.fromARGB(255, 51, 51, 51), Color.fromARGB(255, 255, 255, 255)],
   ];
   List<Color> selectedTheme = [Colors.grey.shade800, Colors.white];
 
@@ -68,75 +68,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 100 * fontScale),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24 * fontScale,
-                    vertical: 24 * fontScale,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 40 * fontScale, // Increased padding
-                          bottom: titleGap,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Game Settings',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 40 * fontScale,
-                              fontWeight: FontWeight.bold,
+            SizedBox.expand(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 100 * fontScale),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 29 * fontScale,
+                      vertical: 24 * fontScale,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 40 * fontScale,
+                            bottom: titleGap,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Game Settings',
+                              style: TextStyle(
+                                fontFamily: 'Risque',
+                                fontSize: 40 * fontScale,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      _buildLabeledField(
-                        "Number of Values",
-                        numberOfValuesController,
-                        fontScale,
-                      ),
-                      SizedBox(height: verticalGap),
-                      _buildLabeledField(
-                        "Length of Numbers",
-                        lengthOfNumbersController,
-                        fontScale,
-                      ),
-                      SizedBox(height: verticalGap),
-                      _buildLabeledColor(
-                        "Difficulty",
-                        selectedDifficultyColor,
-                        fontScale,
-                      ),
-                      SizedBox(height: 24 * fontScale),
-                      _buildColorOptions(difficultyColors, (color, index) {
-                        setState(() {
-                          selectedDifficultyColor = color;
-                          selectedDifficulty = index + 1;
-                        });
-                      }, fontScale),
-                      SizedBox(height: verticalGap),
-                      _buildLabeledColor("Theme", selectedTheme[0], fontScale),
-                      SizedBox(height: 24 * fontScale),
-                      _buildColorOptions(themes.map((t) => t[0]).toList(), (
-                        color,
-                        index,
-                      ) {
-                        setState(() {
-                          selectedTheme = themes[index];
-                        });
-                      }, fontScale),
-                    ],
+                        _buildLabeledField(
+                          "Number of Values",
+                          numberOfValuesController,
+                          fontScale,
+                        ),
+                        SizedBox(height: verticalGap),
+                        _buildLabeledField(
+                          "Length of Numbers",
+                          lengthOfNumbersController,
+                          fontScale,
+                        ),
+                        SizedBox(height: verticalGap),
+                        _buildLabeledColor(
+                          "Difficulty",
+                          selectedDifficultyColor,
+                          fontScale,
+                        ),
+                        SizedBox(height: 24 * fontScale),
+                        _buildColorOptions(difficultyColors, (color, index) {
+                          setState(() {
+                            selectedDifficultyColor = color;
+                            selectedDifficulty = index + 1;
+                          });
+                        }, fontScale),
+                        SizedBox(height: verticalGap),
+                        _buildLabeledColor(
+                          "Theme",
+                          selectedTheme[0],
+                          fontScale,
+                        ),
+                        SizedBox(height: 24 * fontScale),
+                        _buildColorOptions(themes.map((t) => t[0]).toList(), (
+                          color,
+                          index,
+                        ) {
+                          setState(() {
+                            selectedTheme = themes[index];
+                          });
+                        }, fontScale),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             Positioned(
-              bottom: 0.0001 * fontScale, // Closer to bottom
+              bottom: 90,
               left: 0,
               right: 0,
               child: Center(
@@ -244,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ) {
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 40 * fontScale,
+      spacing: 80 * fontScale,
       runSpacing: 40 * fontScale,
       children: List.generate(options.length, (index) {
         final color = options[index];

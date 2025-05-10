@@ -29,6 +29,13 @@ class _InputScreenState extends State<InputScreen>
   late AnimationController _animationController;
   late Animation<double> _shakeAnimation;
 
+  String _getImageAsset() {
+    if (_faultCount == 0) return '../../assets/SmilingFluffy.png';
+    if (_faultCount == 1) return '../../assets/NormalFluffy.png';
+    if (_faultCount == 2) return '../../assets/SadFluffy.png';
+    return '../../assets/Lobza.png';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -113,79 +120,115 @@ class _InputScreenState extends State<InputScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: widget.themeColors[0],
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: Stack(
           children: [
-            const Text(
-              'Input',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '$_correctCount / ${widget.numbersToGuess.length}',
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                final offset = _shakeAnimation.value;
-                return Transform.translate(
-                  offset: Offset(Random().nextBool() ? offset : -offset, 0),
-                  child: child,
-                );
-              },
-              child: Container(
-                width: 150,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: _inputBgColor,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.black),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 50),
+                  const Text(
+                    'Input',
+                    style: TextStyle(
+                      fontFamily: 'Risque',
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  decoration: const InputDecoration(border: InputBorder.none),
-                ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '$_correctCount / ${widget.numbersToGuess.length}',
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          final offset = _shakeAnimation.value;
+                          return Transform.translate(
+                            offset: Offset(
+                              Random().nextBool() ? offset : -offset,
+                              0,
+                            ),
+                            child: child,
+                          );
+                        },
+                        child: Container(
+                          width: 150,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: _inputBgColor,
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: Colors.black, width: 3),
+                          ),
+                          child: TextField(
+                            controller: _controller,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 80,
+                        height: 80,
+                        child: Image.asset(
+                          _getImageAsset(),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: widget.themeColors[1],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: const BorderSide(color: Colors.black),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 10,
-                ),
-              ),
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.black,
+
+            // Positioned Submit Button
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.40,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 189, 232, 140),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: const BorderSide(color: Colors.black, width: 3),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 55,
+                      vertical: 20,
+                    ),
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
             ),

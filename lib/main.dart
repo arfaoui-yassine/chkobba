@@ -1,4 +1,4 @@
-import 'package:chkobba/screens/settings_screen.dart';
+import 'package:chkobba/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MemorizationGameApp extends StatelessWidget {
       title: 'Memorization Game',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true, fontFamily: 'Arial'),
-      home: const SettingsScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
